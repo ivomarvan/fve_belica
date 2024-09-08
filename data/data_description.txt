@@ -1,0 +1,26 @@
+Filename: Timeseries_48.172_17.181_SA2_2000kWp_crystSi_14_38deg_-2deg_2005_2020.csv.gz
+Latitude (decimal degrees):	48.172
+Longitude (decimal degrees):	17.181
+Elevation (m):	131
+Radiation database:	PVGIS-SARAH2
+
+
+Slope: 38 deg. (optimum)
+Azimuth: -2 deg. (optimum)
+Nominal power of the PV system (c-Si) (kWp):	2000.0
+System losses (%):	14.0
+
+
+P: PV system power (W)
+Gb(i): Beam (direct) irradiance on the inclined plane (plane of the array) (W/m2)
+Gd(i): Diffuse irradiance on the inclined plane (plane of the array) (W/m2)
+Gr(i): Reflected irradiance on the inclined plane (plane of the array) (W/m2)
+H_sun: Sun height (degree)
+T2m: 2-m air temperature (degree Celsius)
+WS10m: 10-m total wind speed (m/s)
+Int: 1 means solar radiation values are reconstructed
+
+
+
+PVGIS (c) European Union, 2001-2024
+
