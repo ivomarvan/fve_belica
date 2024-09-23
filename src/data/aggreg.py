@@ -27,22 +27,40 @@ DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 NOGIT_DIR = os.path.join(PROJECT_ROOT, 'nogit_data')
 
 
-# Načtení souboru s komprimovaným obsahem
-file_path = os.path.join(DATA_DIR, 'Timeseries_48.172_17.181_SA2_2000kWp_crystSi_14_38deg_-2deg_2005_2020.csv.gz')
+def test_minute_counts_by_month(df: pd.DataFrame):
 
-# Načtení dat do DataFrame
-df = pd.read_csv(file_path, compression='gzip')
-df['time'] = pd.to_datetime(df['time'], format='%Y%m%d:%H%M', errors='coerce')
+    # Spočítání řádků (minut) pro každý měsíc
+    minutes_per_month = df.groupby('month').size()
 
-# Přidání sloupce pro měsíc
-df['month'] = df['time'].dt.month
-df['hour_minute'] = df['time'].dt.strftime('%H:%M')
-
-# Agregace podle měsíce a času (hodina:minuta)
-aggregated_df = df.groupby(['month', 'hour_minute']).mean()
-
-# Uložení do souboru
-output_path = os.path.join(NOGIT_DIR, 'aggregated.csv.gz')
-aggregated_df.to_csv(output_path, compression='gzip')
+    # Výstup počtu minut pro každý měsíc
+    for month, count in minutes_per_month.items():
+        print(f"Měsíc {month}: {count} minut (řádků)")
 
 
+def main():
+
+    # Načtení souboru s komprimovaným obsahem
+    file_path = os.path.join(DATA_DIR, 'minutes', 'Timeseries_48.172_17.181_SA2_2000kWp_crystSi_14_38deg_-2deg_2005_2020.csv.gz')
+
+    # Načtení dat do DataFrame
+    df = pd.read_csv(file_path, compression='gzip')
+    df['time'] = pd.to_datetime(df['time'], format='%Y%m%d:%H%M', errors='coerce')
+
+    # Přidání sloupce pro měsíc
+    df['month'] = df['time'].dt.month
+    df['hour_minute'] = df['time'].dt.strftime('%H:%M')
+
+    # Odstranění sloupce s časem
+    df = df.drop(columns=['time'])
+
+    # Agregace podle měsíce a času (hodina:minuta)
+    aggregated_df = df.groupby(['month', 'hour_minute']).mean()
+
+    test_minute_counts_by_month(aggregated_df)
+
+    # Uložení do souboru
+    output_path = os.path.join(NOGIT_DIR, 'minutes', 'aggregated.csv.gz')
+    aggregated_df.to_csv(output_path, compression='gzip')
+
+if __name__ == "__main__":
+    main()
