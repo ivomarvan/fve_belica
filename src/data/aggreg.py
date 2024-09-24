@@ -14,7 +14,7 @@ __description__ = '''
         20050101:0910,66520.0,0.0,51.87,1.22,15.1,4.96,3.59,0.0
         
     Výstup:
-    Pro všechny sloupce mimo time udělá průměr pro každou minutu ze všech roků (2005-2020).
+    Pro všechny sloupce mimo time udělá průměr pro každou hodinu ze všech roků (2005-2020).
     Výstup bude uložen do souboru nogit_data/aggregated.csv.gz. 
         
 '''
@@ -27,20 +27,20 @@ DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 NOGIT_DIR = os.path.join(PROJECT_ROOT, 'nogit_data')
 
 
-def test_minute_counts_by_month(df: pd.DataFrame):
+def test_hours_counts_by_month(df: pd.DataFrame):
 
     # Spočítání řádků (minut) pro každý měsíc
-    minutes_per_month = df.groupby('month').size()
+    hours_per_month = df.groupby('month').size()
 
     # Výstup počtu minut pro každý měsíc
-    for month, count in minutes_per_month.items():
-        print(f"Měsíc {month}: {count} minut (řádků)")
+    for month, count in hours_per_month.items():
+        print(f"Měsíc {month}: {count} hodin (řádků)")
 
 
 def main():
 
     # Načtení souboru s komprimovaným obsahem
-    file_path = os.path.join(DATA_DIR, 'minutes', 'Timeseries_48.172_17.181_SA2_2000kWp_crystSi_14_38deg_-2deg_2005_2020.csv.gz')
+    file_path = os.path.join(DATA_DIR, 'hours', 'Timeseries_48.172_17.181_SA2_2000kWp_crystSi_14_38deg_-2deg_2005_2020.csv.gz')
 
     # Načtení dat do DataFrame
     df = pd.read_csv(file_path, compression='gzip')
@@ -48,18 +48,18 @@ def main():
 
     # Přidání sloupce pro měsíc
     df['month'] = df['time'].dt.month
-    df['hour_minute'] = df['time'].dt.strftime('%H:%M')
+    df['hour'] = df['time'].dt.strftime('%H')
 
     # Odstranění sloupce s časem
     df = df.drop(columns=['time'])
 
     # Agregace podle měsíce a času (hodina:minuta)
-    aggregated_df = df.groupby(['month', 'hour_minute']).mean()
+    aggregated_df = df.groupby(['month', 'hour']).mean()
 
-    test_minute_counts_by_month(aggregated_df)
+    test_hours_counts_by_month(aggregated_df)
 
     # Uložení do souboru
-    output_path = os.path.join(NOGIT_DIR, 'minutes', 'aggregated.csv.gz')
+    output_path = os.path.join(NOGIT_DIR, 'hours', 'aggregated.csv.gz')
     aggregated_df.to_csv(output_path, compression='gzip')
 
 if __name__ == "__main__":

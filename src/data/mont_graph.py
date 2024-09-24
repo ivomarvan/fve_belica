@@ -72,20 +72,19 @@ def main():
     # 2a) Optionally read alternative production data
     if USE_ALTERNATIVE_DATA:
         # Path to the alternative data file
-        in_path = os.path.join(NOGIT_DIR, 'minutes', 'aggregated.csv.gz')
+        in_path = os.path.join(NOGIT_DIR, 'hours', 'aggregated.csv.gz')
 
         # Read the alternative production data
         alternative_df = pd.read_csv(
             in_path,
-            usecols=['month', 'hour_minute', 'P']
+            usecols=['month', 'hour', 'P']
         )
 
-        # Convert power from Watts to kWh per minute
-        # Energy per minute in kWh = P (W) * (1/60) hours / 1000 (W to kW)
-        # So energy per minute in kWh = P / (60 * 1000)
-        alternative_df['energy_per_minute_kWh'] = alternative_df['P'] / 60000  # 60 * 1000 = 60000
+        # Convert power from Watts to kWh per hour
+        # Energy per hour in kWh = P (W) * hours / 1000 (W to kW)
+        alternative_df['energy_per_minute_kWh'] = alternative_df['P'] / 1000  # W -> kW
 
-        # Sum energy per minute over the day to get total daily energy per month
+        # Sum energy per hour over the day to get total daily energy per month
         daily_energy = alternative_df.groupby('month')['energy_per_minute_kWh'].sum()
 
         # Convert daily_energy to DataFrame
