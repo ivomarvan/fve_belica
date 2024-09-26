@@ -40,7 +40,8 @@ def test_hours_counts_by_month(df: pd.DataFrame):
 def main():
 
     # Načtení souboru s komprimovaným obsahem
-    file_path = os.path.join(DATA_DIR, 'hours', 'Timeseries_48.172_17.181_SA2_2000kWp_crystSi_14_38deg_-2deg_2005_2020.csv.gz')
+    # file_path = os.path.join(DATA_DIR, 'hours', 'Timeseries_48.172_17.181_SA2_2000kWp_crystSi_14_38deg_-2deg_2005_2020.csv.gz')
+    file_path = os.path.join(DATA_DIR, 'hours', 'Timeseries_48.172_17.181_SA2_500kWp_crystSi_14_38deg_-2deg_2005_2020.csv.gz')
 
     # Načtení dat do DataFrame
     df = pd.read_csv(file_path, compression='gzip')
